@@ -1,101 +1,51 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using MimeKit;
-using MailKit; // for SendAsync extension
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
-namespace PortfolioArchive.Services
+namespace PortfolioArchive.Services;
+
+/// <summary>
+/// Sends the contact-form email through Resend's HTTPS API.
+/// Plain HTTPS works on Render's free tier, unlike SMTP ports 25/465/587.
+/// </summary>
+public class EmailService
 {
-    /// <summary>
-    /// Provides a reusable, singleton email sender using MailKit.
-    /// The client is connected and authenticated once at startup and reused for subsequent sends.
-    /// Implements <see cref="IAsyncDisposable"/> to cleanly disconnect on shutdown.
-    /// </summary>
-    public class EmailService : IAsyncDisposable
+    private readonly HttpClient _http;
+    private readonly ILogger<EmailService> _logger;
+    private readonly string _from;
+    private readonly string _to;
+
+    public EmailService(HttpClient http, IConfiguration configuration, ILogger<EmailService> logger)
     {
-        private readonly SmtpClient _client;
-        private readonly ILogger<EmailService> _logger;
-        private bool _connected;
-        private readonly string _smtpServer;
-        private readonly int _port;
-        private readonly string _senderEmail;
-        private readonly string _appPassword;
+        _http = http;
+        _logger = logger;
 
-        public EmailService(IConfiguration configuration, ILogger<EmailService> logger)
+        // Until you verify your own domain with Resend, use their test sender.
+        _from = configuration["EmailSettings:From"] ?? "Portfolio Contact Form <onboarding@resend.dev>";
+        _to = configuration["EmailSettings:RecipientEmail"] ?? "";
+        var apiKey = configuration["EmailSettings:ApiKey"] ?? "";
+
+        _http.BaseAddress = new Uri("https://api.resend.com/");
+        _http.Timeout = TimeSpan.FromSeconds(15); // fail fast instead of hanging
+        _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+    }
+
+    public async Task SendContactAsync(string name, string email, string message)
+    {
+        var payload = new
         {
-            _logger = logger;
-            _smtpServer = configuration["EmailSettings:SmtpServer"] ?? "smtp.gmail.com";
-            _port = int.TryParse(configuration["EmailSettings:Port"], out var p) ? p : 587;
-            _senderEmail = configuration["EmailSettings:senderEmail"] ?? "example@example.com";
-            _appPassword = configuration["EmailSettings:AppPassword"] ?? string.Empty;
-            _client = new SmtpClient();
-        }
+            from = _from,
+            to = new[] { _to },
+            reply_to = email,
+            subject = $"[Portfolio Inquiry] From {name}",
+            text = $"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+        };
 
-        private async Task EnsureConnectedAsync()
+        using var response = await _http.PostAsJsonAsync("emails", payload);
+        if (!response.IsSuccessStatusCode)
         {
-            // Reconnect if not currently connected (e.g., after timeout or disconnection)
-            if (_connected && _client.IsConnected)
-                return;
-
-            // Reset connection state before (re)connecting
-            _connected = false;
-            try
-            {
-                var socketOptions = _port == 465 ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTls;
-                await _client.ConnectAsync(_smtpServer, _port, socketOptions);
-                if (!string.IsNullOrEmpty(_appPassword))
-                {
-                    await _client.AuthenticateAsync(_senderEmail, _appPassword);
-                }
-                _connected = true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect/authenticate SMTP client");
-                throw;
-            }
-        }
-
-        public async Task SendAsync(MimeMessage message)
-        {
-            // Ensure we have a live, authenticated connection.
-            await EnsureConnectedAsync();
-            try
-            {
-                await _client.SendAsync(message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error sending email");
-                // Reset connection state so a future call will reconnect.
-                _connected = false;
-                if (_client.IsConnected)
-                {
-                    try { await _client.DisconnectAsync(true); } catch { }
-                }
-                throw;
-            }
-        }
-
-
-        public async ValueTask DisposeAsync()
-        {
-            if (_client.IsConnected)
-            {
-                try
-                {
-                    await _client.DisconnectAsync(true);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, "Error during SMTP client disconnect");
-                }
-            }
-            _client.Dispose();
+            var body = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Email API returned {Status}: {Body}", (int)response.StatusCode, body);
+            throw new InvalidOperationException($"Email API error {(int)response.StatusCode}");
         }
     }
 }

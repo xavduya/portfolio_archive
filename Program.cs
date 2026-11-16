@@ -11,7 +11,7 @@ builder.Services.AddDataProtection()
 
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<IProjectService, ProjectService>();
-builder.Services.AddSingleton<EmailService>();
+builder.Services.AddHttpClient<EmailService>();
 
 
 
