@@ -3,9 +3,21 @@
 
     function setup(root) {
         const canvas = root.querySelector('.scratch__cover');
+        const reveal = root.querySelector('.scratch__reveal');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         const cover = new Image();
         const dpr = window.devicePixelRatio || 1;
+
+        // Pick a random reveal image from the pool, so each page load is a
+        // surprise. Falls back to whatever src is already on the <img> (if any)
+        // when no pool is given.
+        const pool = (root.dataset.revealPool || '')
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean);
+        if (pool.length && reveal) {
+            reveal.src = pool[Math.floor(Math.random() * pool.length)];
+        }
 
         let drawing = false;
         let last = null;
@@ -19,8 +31,6 @@
         }
 
         function drawCover() {
-            // Manual "cover" crop so the canvas buffer always matches what's
-            // displayed, keeping scratch position accurate at any aspect ratio.
             const scale = Math.max(canvas.width / cover.naturalWidth, canvas.height / cover.naturalHeight);
             const w = cover.naturalWidth * scale;
             const h = cover.naturalHeight * scale;
