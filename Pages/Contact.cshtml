@@ -1,62 +1,43 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using PortfolioArchive.Services;
-
-namespace PortfolioArchive.Pages;
-
-public class ContactModel : PageModel
-{
-    private readonly ILogger<ContactModel> _logger;
-    private readonly EmailService _emailService;
-
-    public ContactModel(ILogger<ContactModel> logger, EmailService emailService)
-    {
-        _logger = logger;
-        _emailService = emailService;
-    }
-
-    [BindProperty]
-    public ContactInput Input { get; set; } = new();
-
-    public bool Submitted { get; private set; }
-    public string? ErrorMessage { get; private set; }
-
-    public void OnGet() { }
-
-    public async Task<IActionResult> OnPostAsync()
-    {
-        if (!ModelState.IsValid)
-        {
-            return Page();
-        }
-
-        try
-        {
-            await _emailService.SendContactAsync(Input.Name, Input.Email, Input.Message);
-
-            Submitted = true;
-            Input = new ContactInput();
-            ModelState.Clear();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to send contact email");
-            ErrorMessage = "Could not send message. Please email directly or try again later.";
-        }
-
-        return Page();
-    }
-
-    public class ContactInput
-    {
-        [Required, Display(Name = "Name")]
-        public string Name { get; set; } = "";
-
-        [Required, EmailAddress, Display(Name = "Email")]
-        public string Email { get; set; } = "";
-
-        [Required, Display(Name = "Message")]
-        public string Message { get; set; } = "";
-    }
+@page
+@model ContactModel
+@{
+    ViewData["Title"] = "Contact";
+    ViewData["Nav"] = "Contact";
+    ViewData["FooterNote"] = "END OF SECTION 04";
 }
+
+<section class="prose-page">
+    <h1>Send an Email</h1>
+    <p class="prose-page__lead">
+        For questions, send directly to
+        <a href="mailto:mattxavierviduya@gmail.com">mattxavierviduya@gmail.com</a>.
+    </p>
+
+    @if (Model.Submitted)
+    {
+        <p class="form-status">Received. A response will follow within 2&ndash;3 business days.</p>
+    }
+    else if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <p class="form-status form-status--error">@Model.ErrorMessage</p>
+    }
+
+    <form method="post" class="contact-form" novalidate>
+        <div class="contact-form__field">
+            <label asp-for="Input.Name">Name</label>
+            <input asp-for="Input.Name" autocomplete="name" />
+            <span asp-validation-for="Input.Name" class="field-error"></span>
+        </div>
+        <div class="contact-form__field">
+            <label asp-for="Input.Email">Email</label>
+            <input asp-for="Input.Email" type="email" autocomplete="email" />
+            <span asp-validation-for="Input.Email" class="field-error"></span>
+        </div>
+        <div class="contact-form__field">
+            <label asp-for="Input.Message">Message</label>
+            <textarea asp-for="Input.Message" rows="6"></textarea>
+            <span asp-validation-for="Input.Message" class="field-error"></span>
+        </div>
+        <button type="submit">Send Message</button>
+    </form>
+</section>
