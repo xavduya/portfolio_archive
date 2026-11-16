@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+.git/
+.vs/
+.vscode/
+*.md
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# local-only / sensitive
+**/appsettings.Development.json
+**/*.user
+.env
+.env.*
+DataProtection-Keys/

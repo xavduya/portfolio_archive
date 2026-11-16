@@ -1,0 +1,45 @@
+@page
+@model ResumeModel
+@{
+    ViewData["Title"] = "Resume";
+    ViewData["Nav"] = "Resume";
+    ViewData["FooterNote"] = "END OF SECTION 03";
+}
+
+<section class="prose-page">
+    <h1>Resume</h1>
+
+    @if (string.IsNullOrEmpty(Model.ResumeUrl))
+    {
+        <p class="resume-placeholder">Resume not yet available. Please check back soon.</p>
+    }
+</section>
+
+@if (!string.IsNullOrEmpty(Model.ResumeUrl))
+{
+    <div class="resume-preview">
+        <div class="resume-container">
+            <iframe
+                src="@Model.ResumeUrl"
+                class="resume-iframe"
+                title="Resume pdf"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <aside class="resume-summary" aria-labelledby="resume-summary-title">
+            <p class="resume-summary__label" id="resume-summary-title">SUMMARY</p>
+            <p class="resume-summary__prompt">&gt; summarize candidate</p>
+            <p class="resume-summary__text">
+                Matt is a software engineering undergraduate with hands-on experience building web and mobile applications across frontend, backend, database, and AI-integrated systems. His work reflects a practical, user-focused approach: he learns new tools quickly, works comfortably across technologies such as C#, .NET, Flutter, Django, and Firebase, and brings communication and leadership experience from Agile teamwork and editorial work.
+            </p>
+        </aside>
+    </div>
+
+    <p class="resume-download-link">
+        <a href="@Model.ResumeDownloadUrl" target="_blank" rel="noopener noreferrer">
+            Download PDF &rarr;
+        </a>
+    </p>
+}

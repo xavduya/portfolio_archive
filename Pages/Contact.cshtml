@@ -1,0 +1,43 @@
+@page
+@model ContactModel
+@{
+    ViewData["Title"] = "Contact";
+    ViewData["Nav"] = "Contact";
+    ViewData["FooterNote"] = "END OF SECTION 04";
+}
+
+<section class="prose-page">
+    <h1>Send an Email</h1>
+    <p class="prose-page__lead">
+        For questions, send directly to
+        <a href="mailto:mattxavierviduya@gmail.com">mattxavierviduya@gmail.com</a>.
+    </p>
+
+    @if (Model.Submitted)
+    {
+        <p class="form-status">Received. A response will follow within 2&ndash;3 business days.</p>
+    }
+    else if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <p class="form-status form-status--error">@Model.ErrorMessage</p>
+    }
+
+    <form method="post" class="contact-form" novalidate>
+        <div class="contact-form__field">
+            <label asp-for="Input.Name">Name</label>
+            <input asp-for="Input.Name" autocomplete="name" />
+            <span asp-validation-for="Input.Name" class="field-error"></span>
+        </div>
+        <div class="contact-form__field">
+            <label asp-for="Input.Email">Email</label>
+            <input asp-for="Input.Email" type="email" autocomplete="email" />
+            <span asp-validation-for="Input.Email" class="field-error"></span>
+        </div>
+        <div class="contact-form__field">
+            <label asp-for="Input.Message">Message</label>
+            <textarea asp-for="Input.Message" rows="6"></textarea>
+            <span asp-validation-for="Input.Message" class="field-error"></span>
+        </div>
+        <button type="submit">Send Message</button>
+    </form>
+</section>

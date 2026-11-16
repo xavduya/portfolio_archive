@@ -1,0 +1,13 @@
+@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Unrecoverable";
+    ViewData["Nav"] = "";
+}
+
+<section class="prose-page">
+    <span class="specimen-card__tag">Error_X.00</span>
+    <h1>Specimen Unrecoverable</h1>
+    <p class="prose-page__lead">Something on this record failed to resolve. Return to the index and try again.</p>
+    <p><a asp-page="/Index">&larr; Back to index</a></p>
+</section>

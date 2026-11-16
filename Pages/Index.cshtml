@@ -1,0 +1,90 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Index";
+    ViewData["Nav"] = "Index";
+    ViewData["FooterNote"] = "END OF SECTION 01";
+    var projects = Model.Projects;
+    var first = projects.Count > 0 ? projects[0] : null;
+}
+
+@section Sidebar {
+    <div class="panel">
+        <p class="val">Matt Xavier Viduya</p>
+        <p class="note">Interested in web development, mobile development and workflow automation.</p>
+    </div>
+
+    @if (first is not null)
+    {
+        <div class="panel">
+            <p class="val" data-out="title">@first.Title</p>
+            <p class="note" data-out="tag">@first.SpecimenTag</p>
+        </div>
+        <div class="panel panel--grid">
+            <div><p class="lbl">Date</p><p class="val val--sm" data-out="date">@first.Date</p></div>
+            <div><p class="lbl">Type</p><p class="val val--sm" data-out="type">@first.Type</p></div>
+            <div class="span"><p class="lbl">Stack</p><p class="val val--sm" data-out="stack">@first.Stack</p></div>
+        </div>
+    }
+
+    <div class="panel">
+        <p class="lbl">Project list</p>
+        <ol class="index-list">
+            @for (var i = 0; i < projects.Count; i++)
+            {
+                <li>
+                    <button type="button" data-goto="@i" class="@(i == 0 ? "is-active" : "")">
+                        <span>@((i + 1).ToString("00"))</span> @projects[i].Title
+                    </button>
+                </li>
+            }
+        </ol>
+    </div>
+}
+
+@section Aside {
+    <div class="panel">
+        <p class="lbl">Project no.</p>
+        <p class="big" data-out="count">01</p>
+    </div>
+    <div class="panel">
+        <p class="lbl">Total</p>
+        <p class="val" data-out="total">@projects.Count.ToString("00")</p>
+    </div>
+    <div class="panel">
+        <p class="lbl">Next up</p>
+        <p class="val val--sm" data-out="next">@(projects.Count > 1 ? projects[1].Title : "---")</p>
+    </div>
+
+    <div class="side__foot">
+        @if (first is not null)
+        {
+            <a class="btn btn--solid" data-out-href href="@Url.Page("/Work/Detail", new { slug = first.Slug })">Open project</a>
+        }
+    </div>
+}
+
+<div class="stage" data-stage aria-roledescription="carousel" aria-label="Projects">
+    <p class="stage__count" data-out="counter" aria-hidden="true">01 / @projects.Count.ToString("00")</p>
+
+    @for (var i = 0; i < projects.Count; i++)
+    {
+        var p = projects[i];
+        <a class="slide @(i == 0 ? "is-active" : "")"
+           asp-page="/Work/Detail" asp-route-slug="@p.Slug"
+           aria-label="Open project: @p.Title"
+           data-title="@p.Title" data-tag="@p.SpecimenTag" data-date="@p.Date"
+           data-type="@p.Type" data-stack="@p.Stack">
+            <span class="plate">
+                <img src="@p.ImageUrl" alt="@p.Title" loading="@(i == 0 ? "eager" : "lazy")" />
+            </span>
+            <span class="slide__caption">@p.Title [OPEN]</span>
+        </a>
+    }
+
+    @if (projects.Count > 1)
+    {
+        <button type="button" class="stage__btn stage__btn--prev" data-prev aria-label="Previous project">&larr;</button>
+        <button type="button" class="stage__btn stage__btn--next" data-next aria-label="Next project">&rarr;</button>
+    }
+</div>

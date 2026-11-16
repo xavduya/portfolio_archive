@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] &mdash; xaviduya</title>
+    <meta name="description" content="Portfolio of Matt Xavier Viduya, software engineering student." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script>document.documentElement.classList.add('js');</script>
+    <script src="~/js/archive.js" defer></script>
+    <script src="~/js/ascii-trail.js" defer></script>
+</head>
+<body>
+    @{
+        var hasSide = IsSectionDefined("Sidebar");
+        var hasAside = IsSectionDefined("Aside");
+        var nav = ViewData["Nav"] as string;
+    }
+    <div class="frame">
+        <header class="bar bar--top">
+            <strong>XAVIDUYA // PORTFOLIO_ARCHIVE</strong>
+            <span>STATUS: [OPEN TO INTERNSHIPS]</span>
+        </header>
+
+        <nav class="nav" aria-label="Primary">
+            <a asp-page="/Index" class="@(nav == "Index" ? "is-active" : "")">Index</a>
+            <a asp-page="/About" class="@(nav == "About" ? "is-active" : "")">About</a>
+            <a asp-page="/Resume" class="@(nav == "Resume" ? "is-active" : "")">Resume</a>
+            <a asp-page="/Contact" class="@(nav == "Contact" ? "is-active" : "")">Contact</a>
+        </nav>
+
+        <div class="frame__body @(hasSide ? "has-side" : "") @(hasAside ? "has-aside" : "")">
+            @if (hasSide)
+            {
+                <aside class="side">@RenderSection("Sidebar", required: false)</aside>
+            }
+            <main class="main">@RenderBody()</main>
+            @if (hasAside)
+            {
+                <aside class="side side--right">@RenderSection("Aside", required: false)</aside>
+            }
+        </div>
+
+        <footer class="bar bar--bottom">
+            <span>@(ViewData["FooterNote"] ?? "END OF RECORD")</span>
+            <span>iACADEMY CEBU // SOFTWARE ENGINEERING</span>
+            <span>&copy; @DateTime.Now.Year</span>
+        </footer>
+    </div>
+</body>
+</html>
