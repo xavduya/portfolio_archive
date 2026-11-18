@@ -380,6 +380,10 @@ body.demo-open {
     color: var(--ink);
 }
 
+.index-list li:last-child button {
+    border-bottom: 0;
+}
+
 /* ---------- 5. Home: project carousel ---------- */
 .stage {
     position: relative;
@@ -1046,7 +1050,7 @@ body.demo-open {
 
 /* About page: right column is a single full-bleed scratch image, no borders */
 .frame__body.has-aside:has(.scratch) {
-    grid-template-columns: minmax(0, 1fr) clamp(320px, 38vw, 680px);
+    grid-template-columns: minmax(0, 1fr) clamp(400px, 46vw, 760px);
 }
 
 .side--right:has(.scratch) {
@@ -1062,7 +1066,7 @@ body.demo-open {
 
 .scratch__reveal {
     object-fit: cover;
-    object-position: left center;
+    object-position: center center;
 }
 
 
