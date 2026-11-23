@@ -1,0 +1,13 @@
+@* Interactive demo of QRemember focusing on Event Creation & Guest Photo Upload.
+   Rendered inside the device demo frame on the QRemember detail page.
+   Runs completely in-memory — guests can create events, generate QR codes, upload photos, and view the live gallery. *@
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/qremember-demo.css" asp-append-version="true" />
+
+<div class="qr-demo" id="qremember-demo">
+    <noscript><p style="padding:1.5rem;text-align:center;">The QRemember interactive demo requires JavaScript.</p></noscript>
+</div>
+
+<script src="~/js/qremember-demo.js" asp-append-version="true" defer></script>
