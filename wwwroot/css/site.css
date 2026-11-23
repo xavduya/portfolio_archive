@@ -753,6 +753,500 @@ body.demo-open {
     display: inline;
 }
 
+/* =========================================================
+   Spherical 3D Scrolling Gallery (QRemember Screenshots)
+   Inspired by cylindrical/spherical panoramic image wrap
+   ========================================================= */
+.device__screen--sphere {
+    overflow: hidden !important;
+}
+
+.sphere-gallery {
+    --card-w: clamp(240px, 32vw, 330px);
+    --card-h: clamp(170px, 22vw, 225px);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    background: radial-gradient(ellipse 85% 70% at 50% 45%, #181920 0%, #0d0e12 60%, #070709 100%);
+    display: flex;
+    flex-direction: column;
+    outline: none;
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+}
+
+/* Atmospheric subtle vignette and backdrop glow */
+.sphere-gallery::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 45%, rgba(184, 151, 90, 0.07) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.device.is-expanded .sphere-gallery {
+    --card-w: clamp(340px, 36vw, 500px);
+    --card-h: clamp(235px, 25vw, 340px);
+}
+
+.sphere-gallery__stage {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    perspective: 1100px;
+    perspective-origin: 50% 50%;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+}
+
+.sphere-gallery__stage:active {
+    cursor: grabbing;
+}
+
+.sphere-gallery__stage::-webkit-scrollbar {
+    display: none;
+}
+
+.sphere-gallery__track {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding-left: calc(50% - var(--card-w) / 2);
+    padding-right: calc(50% - var(--card-w) / 2);
+    transform-style: preserve-3d;
+    height: 100%;
+    align-items: center;
+}
+
+/* Individual Spherical Card */
+.sphere-card {
+    position: relative;
+    flex: 0 0 var(--card-w);
+    width: var(--card-w);
+    height: var(--card-h);
+    transform-style: preserve-3d;
+    will-change: transform, filter;
+    cursor: pointer;
+    transition: transform 0.08s ease-out, filter 0.08s ease-out;
+}
+
+.sphere-card__inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #14151b;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.sphere-card:hover .sphere-card__inner,
+.sphere-card.is-center .sphere-card__inner {
+    border-color: rgba(184, 151, 90, 0.85);
+    box-shadow: 0 20px 42px rgba(0, 0, 0, 0.85), 0 0 24px rgba(184, 151, 90, 0.25);
+}
+
+.sphere-card.is-center {
+    cursor: zoom-in;
+}
+
+.sphere-card__zoom-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 7px;
+    background: rgba(15, 16, 22, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #e6e6e6;
+    font-family: var(--font);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    border-radius: 3px;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: all 0.15s ease;
+}
+
+.sphere-card:hover .sphere-card__zoom-btn,
+.sphere-card.is-center .sphere-card__zoom-btn {
+    opacity: 1;
+    background: #B8975A;
+    border-color: #B8975A;
+    color: #000;
+}
+
+.sphere-card__thumb {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    background: #090a0e;
+    overflow: hidden;
+}
+
+.sphere-card__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.sphere-card:hover .sphere-card__thumb img {
+    transform: scale(1.03);
+}
+
+.sphere-card__caption {
+    padding: 7px 11px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0f1015;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: var(--font);
+    font-size: 0.64rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.sphere-card__num {
+    color: #B8975A;
+    font-weight: 700;
+}
+
+.sphere-card__name {
+    color: #aaa;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+
+/* Footer: Progress bar and controls */
+.sphere-gallery__footer {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 18px 12px;
+    background: linear-gradient(180deg, transparent 0%, rgba(7, 7, 9, 0.85) 100%);
+}
+
+.sphere-gallery__progress-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.sphere-gallery__progress-track {
+    position: relative;
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.sphere-gallery__progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: #B8975A;
+    transition: width 0.05s linear;
+}
+
+.sphere-gallery__meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font);
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    color: #888;
+}
+
+.sphere-gallery__pct {
+    color: #e6e6e6;
+    font-weight: 700;
+}
+
+.sphere-gallery__hint {
+    color: #666;
+    font-size: 0.58rem;
+}
+
+.sphere-gallery__arrows {
+    display: flex;
+    gap: 6px;
+}
+
+.sphere-gallery__arrow {
+    width: 26px;
+    height: 26px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e6e6e6;
+    font-family: var(--font);
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    border-radius: 4px;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.sphere-gallery__arrow:hover {
+    background: #B8975A;
+    border-color: #B8975A;
+    color: #000;
+}
+
+/* =========================================================
+   75%+ Screen Zoom Lightbox Modal
+   ========================================================= */
+.sphere-zoom-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(8, 9, 13, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+    padding: 2vw;
+}
+
+.sphere-zoom-modal.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+body.sphere-zoom-open {
+    overflow: hidden !important;
+}
+
+.sphere-zoom-backdrop {
+    position: absolute;
+    inset: 0;
+    cursor: zoom-out;
+}
+
+.sphere-zoom-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    /* Occupies at least 75% of screen width and height */
+    width: 85vw;
+    min-width: 75vw;
+    height: 85vh;
+    min-height: 75vh;
+    max-width: 1600px;
+    max-height: 92vh;
+    background: #0f1016;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(184, 151, 90, 0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    animation: sphereZoomPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sphereZoomPop {
+    from {
+        transform: scale(0.92);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.sphere-zoom-header {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 18px;
+    background: #14151e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: var(--font);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.sphere-zoom-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sphere-zoom-tag {
+    color: #B8975A;
+    font-weight: 700;
+}
+
+.sphere-zoom-title {
+    color: #e6e6e6;
+    font-weight: 600;
+}
+
+.sphere-zoom-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.sphere-zoom-hint {
+    color: #777;
+    font-size: 0.62rem;
+}
+
+.sphere-zoom-close {
+    background: transparent;
+    color: #e6e6e6;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-family: var(--font);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.sphere-zoom-close:hover {
+    background: #B8975A;
+    border-color: #B8975A;
+    color: #000;
+}
+
+.sphere-zoom-body {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 50%, #171822 0%, #0a0b0f 100%);
+    overflow: hidden;
+    padding: 20px;
+}
+
+.sphere-zoom-img-wrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sphere-zoom-img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    /* Ensures the image prominently fills at least 75% of viewport */
+    min-width: min(75vw, 1000px);
+    object-fit: contain;
+    display: block;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8);
+}
+
+.sphere-zoom-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    background: rgba(15, 16, 22, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #e6e6e6;
+    font-size: 1.5rem;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+}
+
+.sphere-zoom-nav:hover {
+    background: #B8975A;
+    border-color: #B8975A;
+    color: #000;
+}
+
+.sphere-zoom-nav--prev { left: 16px; }
+.sphere-zoom-nav--next { right: 16px; }
+
+.sphere-zoom-footer {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 18px;
+    background: #111218;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: var(--font);
+    font-size: 0.62rem;
+    color: #888;
+}
+
+.sphere-zoom-scale-badge {
+    color: #B8975A;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+
+.sphere-zoom-exit-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-family: var(--font);
+    font-size: 0.65rem;
+    cursor: pointer;
+    padding: 4px 6px;
+    transition: color 0.15s ease;
+}
+
+.sphere-zoom-exit-btn:hover {
+    color: #fff;
+}
+
 /* ---------- 7. Pages ---------- */
 
 /* About, Contact, Error */

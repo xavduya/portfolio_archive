@@ -27,8 +27,8 @@
         <div class="panel"><p class="lbl">Stack</p><p class="val val--sm">@p.Stack</p></div>
         <div class="panel"><p class="lbl">Type</p><p class="val val--sm">@p.Type</p></div>
         <div class="panel">
-            <p class="lbl">Demo video</p>
-            <p class="val val--sm">@(string.IsNullOrWhiteSpace(p.DemoVideo) ? "PENDING" : "AVAILABLE")</p>
+            <p class="lbl">@(p.Slug.Equals("QREMEMBER", StringComparison.OrdinalIgnoreCase) ? "Screenshots" : "Demo video")</p>
+            <p class="val val--sm">@(p.Slug.Equals("QREMEMBER", StringComparison.OrdinalIgnoreCase) ? "AVAILABLE" : string.IsNullOrWhiteSpace(p.DemoVideo) ? "PENDING" : "AVAILABLE")</p>
         </div>
         <div class="panel">
             <p class="lbl">Interactive demo</p>
@@ -105,21 +105,166 @@
 
         <div class="demos @(isPhoneDemo ? "" : "demos--wide")">
             <section class="demo" aria-labelledby="demo-video-title">
-                <div class="demo__video">
-                    @if (!string.IsNullOrWhiteSpace(project.DemoVideo))
-                    {
-                        <video controls preload="metadata" playsinline src="@project.DemoVideo">
-                            Your browser doesn't support embedded video.
-                        </video>
-                    }
-                    else
-                    {
-                        <div class="slot">
-                            <span class="slot__box">VIDEO [PLACEHOLDER]</span>
-                            <span class="slot__hint">Walkthrough coming soon</span>
+                @if (project.Slug.Equals("QREMEMBER", StringComparison.OrdinalIgnoreCase))
+                {
+                    <div class="demo__device">
+                        <div class="device" role="region" aria-label="QRemember Screenshots" data-sphere-gallery>
+                            <div class="device__bar">
+                                <span class="device__tab">QREMEMBER</span>
+                                <span class="device__url" data-sphere-counter>01 / 10 &mdash; Landing Page</span>
+                                <button type="button" class="device__expand" data-expand aria-pressed="false" aria-label="Expand screenshots">
+                                    <span class="device__expand-icon">[+]</span><span class="device__expand-label"> EXPAND</span>
+                                </button>
+                            </div>
+                            <div class="device__screen device__screen--sphere">
+                                <div class="sphere-gallery" tabindex="0" aria-label="QRemember Screenshot Gallery">
+                                    <div class="sphere-gallery__stage" data-sphere-stage>
+                                        <div class="sphere-gallery__track" data-sphere-track>
+                                            <div class="sphere-card" data-label="Landing Page">
+                                                <div class="sphere-card__inner">
+                                                    <div class="sphere-card__thumb">
+                                                        <img src="/Images/qremember/01-landing.png" alt="Landing Page — Hero Section" loading="lazy" />
+                                                    </div>
+                                                    <div class="sphere-card__caption">
+                                                        <span class="sphere-card__num">01</span>
+                                                        <span class="sphere-card__name">Landing Page</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="sphere-card" data-label="Features">
+                                                <div class="sphere-card__inner">
+                                                    <div class="sphere-card__thumb">
+                                                        <img src="/Images/qremember/02-features.png" alt="Features &amp; How It Works" loading="lazy" />
+                                                    </div>
+                                                    <div class="sphere-card__caption">
+                                                        <span class="sphere-card__num">02</span>
+                                                        <span class="sphere-card__name">Features</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="sphere-card" data-label="Call to Action">
+                                                <div class="sphere-card__inner">
+                                                    <div class="sphere-card__thumb">
+                                                        <img src="/Images/qremember/03-cta.png" alt="Call to Action" loading="lazy" />
+                                                    </div>
+                                                    <div class="sphere-card__caption">
+                                                        <span class="sphere-card__num">03</span>
+                                                        <span class="sphere-card__name">Call to Action</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="sphere-card" data-label="Login">
+                                                <div class="sphere-card__inner">
+                                                    <div class="sphere-card__thumb">
+                                                        <img src="/Images/qremember/04-login.png" alt="Organizer Login" loading="lazy" />
+                                                    </div>
+                                                    <div class="sphere-card__caption">
+                                                        <span class="sphere-card__num">04</span>
+                                                        <span class="sphere-card__name">Login</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="sphere-card" data-label="Create Event">
+                                                <div class="sphere-card__inner">
+                                                    <div class="sphere-card__thumb">
+                                                        <img src="/Images/qremember/05-create.png" alt="Create Event Form" loading="lazy" />
+                                                    </div>
+                                                    <div class="sphere-card__caption">
+                                                        <span class="sphere-card__num">05</span>
+                                                        <span class="sphere-card__name">Create Event</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="sphere-card" data-label="Recent Events">
+                                                <div class="sphere-card__inner">
+                                                    <div class="sphere-card__thumb">
+                                                        <img src="/Images/qremember/06-events.png" alt="Recent Events Dashboard" loading="lazy" />
+                                                    </div>
+                                                    <div class="sphere-card__caption">
+                                                        <span class="sphere-card__num">06</span>
+                                                        <span class="sphere-card__name">Recent Events</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="sphere-card" data-label="Find Event">
+                                                <div class="sphere-card__inner">
+                                                    <div class="sphere-card__thumb">
+                                                        <img src="/Images/qremember/07-find.png" alt="Find Your Event" loading="lazy" />
+                                                    </div>
+                                                    <div class="sphere-card__caption">
+                                                        <span class="sphere-card__num">07</span>
+                                                        <span class="sphere-card__name">Find Event</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="sphere-card" data-label="Guest Upload">
+                                                <div class="sphere-card__inner">
+                                                    <div class="sphere-card__thumb">
+                                                        <img src="/Images/qremember/08-upload.png" alt="Guest Photo Upload" loading="lazy" />
+                                                    </div>
+                                                    <div class="sphere-card__caption">
+                                                        <span class="sphere-card__num">08</span>
+                                                        <span class="sphere-card__name">Guest Upload</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="sphere-card" data-label="Event Gallery">
+                                                <div class="sphere-card__inner">
+                                                    <div class="sphere-card__thumb">
+                                                        <img src="/Images/qremember/09-gallery.png" alt="Event Gallery View" loading="lazy" />
+                                                    </div>
+                                                    <div class="sphere-card__caption">
+                                                        <span class="sphere-card__num">09</span>
+                                                        <span class="sphere-card__name">Event Gallery</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="sphere-card" data-label="Photo Moderation">
+                                                <div class="sphere-card__inner">
+                                                    <div class="sphere-card__thumb">
+                                                        <img src="/Images/qremember/10-moderate.png" alt="Photo Moderation Panel" loading="lazy" />
+                                                    </div>
+                                                    <div class="sphere-card__caption">
+                                                        <span class="sphere-card__num">10</span>
+                                                        <span class="sphere-card__name">Photo Moderation</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="sphere-gallery__footer">
+                                        <div class="sphere-gallery__progress-wrap">
+                                            <div class="sphere-gallery__progress-track" data-progress-track title="Click or drag to scrub">
+                                                <div class="sphere-gallery__progress-fill" data-progress-fill></div>
+                                            </div>
+                                            <div class="sphere-gallery__meta-row">
+                                                <span class="sphere-gallery__pct" data-progress-pct>0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    }
-                </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="demo__video">
+                        @if (!string.IsNullOrWhiteSpace(project.DemoVideo))
+                        {
+                            <video controls preload="metadata" playsinline src="@project.DemoVideo">
+                                Your browser doesn't support embedded video.
+                            </video>
+                        }
+                        else
+                        {
+                            <div class="slot">
+                                <span class="slot__box">VIDEO [PLACEHOLDER]</span>
+                                <span class="slot__hint">Walkthrough coming soon</span>
+                            </div>
+                        }
+                    </div>
+                }
             </section>
 
             <section class="demo" aria-labelledby="demo-live-title">
