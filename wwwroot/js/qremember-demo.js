@@ -248,19 +248,19 @@
 
         <div class="qr-nav__tabs">
           <button type="button" class="qr-tab ${STATE.view === 'create' ? 'is-active' : ''}" data-nav="create">
-            ➕ 1. Create Event
+            1. Create Event
           </button>
           <button type="button" class="qr-tab ${STATE.view === 'ready' ? 'is-active' : ''}" data-nav="ready">
-            🎫 2. Event Ready &amp; QR
+            2. Event Ready &amp; QR
           </button>
           <button type="button" class="qr-tab ${STATE.view === 'upload' ? 'is-active' : ''}" data-nav="upload">
-            📤 3. Guest Upload
+            3. Guest Upload
           </button>
           <button type="button" class="qr-tab ${STATE.view === 'gallery' ? 'is-active' : ''}" data-nav="gallery">
-            🖼️ 4. Gallery (${curEvent.photos.length})
+            4. Gallery 
           </button>
           <button type="button" class="qr-tab ${STATE.view === 'my-events' ? 'is-active' : ''}" data-nav="my-events">
-            📋 My Events
+            My Events
           </button>
         </div>
 
@@ -278,7 +278,6 @@
       html += `
         <div class="qr-header">
           <h2>What is the event?</h2>
-          <p class="qr-subtitle">We'll use this to create your gallery and QR code</p>
         </div>
 
         <div class="qr-form-card">
@@ -368,7 +367,7 @@
               <span>&#8681; Download QR Code (PNG)</span>
             </button>
             <button type="button" class="qr-btn qr-btn-outline" data-nav="gallery" style="margin-top:0;">
-              <span>View Event Gallery (${curEvent.photos.length} photos)</span>
+              <span>View Event Gallery</span>
             </button>
           </div>
         </div>
@@ -445,7 +444,7 @@
 
             <div style="border-top:1px solid var(--qr-line); margin-top:18px; padding-top:12px; text-align:center;">
               <button type="button" class="qr-copy-btn" data-nav="gallery">
-                View Event Gallery (${curEvent.photos.length} photos already uploaded) &rarr;
+                View Event Gallery &rarr;
               </button>
             </div>
           </div>
@@ -536,7 +535,7 @@
 
         <div style="margin-bottom:16px; display:flex; justify-content:flex-end;">
           <button type="button" class="qr-btn qr-btn-gold" data-nav="create" style="width:auto; padding:8px 14px; font-size:11.5px;">
-            ➕ Create New Event
+            Create New Event
           </button>
         </div>
 
