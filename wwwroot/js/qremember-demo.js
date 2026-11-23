@@ -33,7 +33,7 @@
     {
       title: 'First Dance Moments',
       author: 'Marcus & Ella',
-      caption: 'Under the fairy lights on the open pavilion ✨',
+      caption: 'Under the fairy lights on the open pavilion',
       url: createSvgPhoto('First Dance Moments', '#5C4A33', '#B8975A',
         '<path d="M9 18l6-6-6-6"/><circle cx="12" cy="12" r="9"/>', 'Marcus & Ella')
     },
@@ -47,7 +47,7 @@
     {
       title: 'Champagne Toast',
       author: 'David Tan',
-      caption: 'Cheers to forever! 🥂',
+      caption: 'Cheers to forever!',
       url: createSvgPhoto('Champagne Toast', '#8E6746', '#D6B48B',
         '<path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/>', 'David Tan')
     },
@@ -285,9 +285,9 @@
             ⚡ Quick-fill presets:
           </p>
           <div class="qr-presets">
-            <button type="button" class="qr-preset-btn" data-preset="wedding">💍 Jane &amp; John's Wedding</button>
-            <button type="button" class="qr-preset-btn" data-preset="tech">🚀 Cebu Tech Summit</button>
-            <button type="button" class="qr-preset-btn" data-preset="birthday">🎉 21st Birthday Gala</button>
+            <button type="button" class="qr-preset-btn" data-preset="wedding">Jane &amp; John's Wedding</button>
+            <button type="button" class="qr-preset-btn" data-preset="tech">Cebu Tech Summit</button>
+            <button type="button" class="qr-preset-btn" data-preset="birthday">21st Birthday Gala</button>
           </div>
 
           <form id="qr-create-form">
@@ -361,7 +361,7 @@
 
           <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
             <button type="button" class="qr-btn qr-btn-gold" id="qr-open-guest-btn">
-              <span>📲 Simulate Guest Scan &amp; Upload</span> &rarr;
+              <span>Simulate Guest Scan &amp; Upload</span> &rarr;
             </button>
             <button type="button" class="qr-btn qr-btn-outline" id="qr-download-btn">
               <span>&#8681; Download QR Code (PNG)</span>
@@ -395,7 +395,7 @@
             <div class="qr-sample-strip">
               <span>Don't have photos on hand?</span>
               <button type="button" class="qr-sample-add-btn" id="qr-sample-add-btn">
-                📸 Add Sample Event Photos
+                Add Sample Event Photos
               </button>
             </div>
 
@@ -464,7 +464,7 @@
               + Upload Photos
             </button>
             <button type="button" class="qr-sample-add-btn" data-nav="ready">
-              🎫 QR Code
+              QR Code
             </button>
           </div>
         </div>
@@ -472,9 +472,9 @@
         <div class="qr-gallery-hero">
           <h2>${esc(curEvent.name)}</h2>
           <div class="qr-gallery-meta">
-            <span>📅 Event Date: <strong>${esc(curEvent.date)}</strong></span>
-            <span>👤 Host: <strong>${esc(curEvent.organizer)}</strong></span>
-            <span>🔑 Code: <strong>${esc(curEvent.code)}</strong></span>
+            <span>Event Date: <strong>${esc(curEvent.date)}</strong></span>
+            <span>Host: <strong>${esc(curEvent.organizer)}</strong></span>
+            <span>Code: <strong>${esc(curEvent.code)}</strong></span>
           </div>
         </div>
 
@@ -550,8 +550,8 @@
                   </span>
                 </div>
                 <div class="qr-event-item-meta">
-                  <span>📅 ${esc(ev.date)}</span> &bull; 
-                  <span>📸 ${ev.photos.length} photos</span>
+                  <span>${esc(ev.date)}</span> &bull; 
+                  <span>${ev.photos.length} photos</span>
                 </div>
                 <p style="font-size:12px; color:#555; margin:0 0 10px; line-height:1.4;">
                   ${esc(ev.description || 'No description.')}
